@@ -16,6 +16,7 @@ const reservationRoutes = require('./routes/reservations');
 const receiptRoutes = require('./routes/receipts');
 const deliveryOrderRoutes = require('./routes/deliveryOrders');
 const transferRoutes = require('./routes/transfers');
+const adjustmentRoutes = require('./routes/adjustments');
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use('/api/reservations', reservationRoutes);
 app.use('/api/receipts', receiptRoutes);
 app.use('/api/delivery-orders', deliveryOrderRoutes);
 app.use('/api/transfers', transferRoutes);
+app.use('/api/adjustments', adjustmentRoutes);
 
 // 404 handler
 app.use((req, res) => {
