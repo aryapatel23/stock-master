@@ -19,6 +19,9 @@ const transferRoutes = require('./routes/transfers');
 const adjustmentRoutes = require('./routes/adjustments');
 const ledgerRoutes = require('./routes/ledger');
 const taskRoutes = require('./routes/tasks');
+const reorderRuleRoutes = require('./routes/reorderRules');
+const alertRoutes = require('./routes/alerts');
+const purchaseOrderRoutes = require('./routes/purchaseOrders');
 
 const app = express();
 
@@ -66,6 +69,9 @@ app.use('/api/transfers', transferRoutes);
 app.use('/api/adjustments', adjustmentRoutes);
 app.use('/api/ledger', ledgerRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/reorder-rules', reorderRuleRoutes);
+app.use('/api/alerts', alertRoutes);
+app.use('/api/purchase-orders', purchaseOrderRoutes);
 
 // 404 handler
 app.use((req, res) => {
