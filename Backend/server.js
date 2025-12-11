@@ -22,6 +22,8 @@ const taskRoutes = require('./routes/tasks');
 const reorderRuleRoutes = require('./routes/reorderRules');
 const alertRoutes = require('./routes/alerts');
 const purchaseOrderRoutes = require('./routes/purchaseOrders');
+const dashboardRoutes = require('./routes/dashboard');
+const reportRoutes = require('./routes/reports');
 
 const app = express();
 
@@ -72,6 +74,8 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/reorder-rules', reorderRuleRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/purchase-orders', purchaseOrderRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/reports', reportRoutes);
 
 // 404 handler
 app.use((req, res) => {
