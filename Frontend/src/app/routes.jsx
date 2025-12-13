@@ -14,6 +14,7 @@ import ProductForm from '../features/products/ProductForm';
 import WarehouseList from '../features/warehouses/WarehouseList';
 import WarehouseDetail from '../features/warehouses/WarehouseDetail';
 import WarehouseForm from '../features/warehouses/WarehouseForm';
+import StockList from '../features/stock/StockList';
 
 const AppRoutes = () => {
   return (
@@ -108,7 +109,7 @@ const AppRoutes = () => {
           path="/stock"
           element={
             <RoleRoute allowedRoles={['admin', 'manager']}>
-              <div>Stock Page</div>
+              <StockList />
             </RoleRoute>
           }
         />
@@ -211,4 +212,5 @@ const AppRoutes = () => {
   );
 };
 
+export { AppRoutes };
 export default AppRoutes;
