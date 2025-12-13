@@ -11,6 +11,9 @@ import NotFound from '../pages/NotFound';
 import ProductList from '../features/products/ProductList';
 import ProductDetail from '../features/products/ProductDetail';
 import ProductForm from '../features/products/ProductForm';
+import WarehouseList from '../features/warehouses/WarehouseList';
+import WarehouseDetail from '../features/warehouses/WarehouseDetail';
+import WarehouseForm from '../features/warehouses/WarehouseForm';
 
 const AppRoutes = () => {
   return (
@@ -69,7 +72,34 @@ const AppRoutes = () => {
           path="/warehouses"
           element={
             <RoleRoute allowedRoles={['admin']}>
-              <div>Warehouses Page</div>
+              <WarehouseList />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/warehouses/new"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <WarehouseForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/warehouses/:id"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <WarehouseDetail />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/warehouses/:id/edit"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <WarehouseForm />
             </RoleRoute>
           }
         />
