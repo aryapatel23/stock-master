@@ -8,6 +8,7 @@ import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 import Dashboard from '../pages/Dashboard';
 import NotFound from '../pages/NotFound';
+import ProductList from '../features/products/ProductList';
 
 const AppRoutes = () => {
   return (
@@ -30,7 +31,7 @@ const AppRoutes = () => {
           path="/products"
           element={
             <RoleRoute allowedRoles={['admin', 'manager']}>
-              <div>Products Page</div>
+              <ProductList />
             </RoleRoute>
           }
         />
