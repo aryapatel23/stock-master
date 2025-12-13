@@ -1,21 +1,19 @@
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/Header';
 
 export default function MainLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-gray-100 flex">
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
-      {/* Main Content */}
-      <div className="lg:pl-64">
+      <div className="flex-1 flex flex-col">
         <Header setSidebarOpen={setSidebarOpen} />
         
-        <main className="py-6">
+        <main className="flex-1 py-6">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Outlet />
           </div>
