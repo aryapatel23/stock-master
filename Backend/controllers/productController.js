@@ -59,7 +59,7 @@ const getProducts = async (req, res) => {
 
     res.json({
       success: true,
-      products: products.map(p => p.toPublicJSON()),
+      data: products.map(p => p.toPublicJSON()),
       meta: {
         total,
         page: parseInt(page),
@@ -123,7 +123,7 @@ const createProduct = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Product created successfully',
-      product: product.toPublicJSON()
+      data: product.toPublicJSON()
     });
   } catch (error) {
     res.status(500).json({
@@ -156,16 +156,18 @@ const getProductById = async (req, res) => {
 
     res.json({
       success: true,
-      product: product.toPublicJSON(),
-      totalOnHand: product.totalOnHand,
-      totalReserved: product.totalReserved,
-      locations: locations.map(loc => ({
-        locationId: loc.locationId?._id,
-        locationName: loc.locationId?.name,
-        qty: loc.quantity,
-        reserved: loc.reserved,
-        available: loc.quantity - loc.reserved
-      }))
+      data: {
+        ...product.toPublicJSON(),
+        totalOnHand: product.totalOnHand,
+        totalReserved: product.totalReserved,
+        locations: locations.map(loc => ({
+          locationId: loc.locationId?._id,
+          locationName: loc.locationId?.name,
+          qty: loc.quantity,
+          reserved: loc.reserved,
+          available: loc.quantity - loc.reserved
+        }))
+      }
     });
   } catch (error) {
     res.status(500).json({
@@ -223,7 +225,7 @@ const updateProduct = async (req, res) => {
     res.json({
       success: true,
       message: 'Product updated successfully',
-      product: product.toPublicJSON()
+      data: product.toPublicJSON()
     });
   } catch (error) {
     res.status(500).json({

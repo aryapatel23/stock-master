@@ -112,18 +112,20 @@ productSchema.virtual('isLowStock').get(function() {
 // Method to get public JSON
 productSchema.methods.toPublicJSON = function() {
   return {
-    id: this._id,
+    _id: this._id,
     name: this.name,
     sku: this.sku,
     description: this.description,
-    categoryId: this.categoryId,
+    category: this.categoryId ? (this.categoryId.name ? { _id: this.categoryId._id, name: this.categoryId.name } : this.categoryId) : null,
     uom: this.uom,
     defaultWarehouseId: this.defaultWarehouseId,
     attributes: Object.fromEntries(this.attributes),
+    totalStock: this.totalOnHand,
     totalOnHand: this.totalOnHand,
     totalReserved: this.totalReserved,
     availableQty: this.availableQty,
-    reorderLevel: this.reorderLevel,
+    reorderPoint: this.reorderLevel,
+    reorderQuantity: this.reorderLevel,
     isLowStock: this.isLowStock,
     price: this.price,
     cost: this.cost,
