@@ -9,6 +9,8 @@ import Register from '../pages/auth/Register';
 import Dashboard from '../pages/Dashboard';
 import NotFound from '../pages/NotFound';
 import ProductList from '../features/products/ProductList';
+import ProductDetail from '../features/products/ProductDetail';
+import ProductForm from '../features/products/ProductForm';
 
 const AppRoutes = () => {
   return (
@@ -32,6 +34,33 @@ const AppRoutes = () => {
           element={
             <RoleRoute allowedRoles={['admin', 'manager']}>
               <ProductList />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/products/new"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <ProductForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/products/:id"
+          element={
+            <RoleRoute allowedRoles={['admin', 'manager']}>
+              <ProductDetail />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/products/:id/edit"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <ProductForm />
             </RoleRoute>
           }
         />
