@@ -44,9 +44,11 @@ const signup = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'User created successfully',
-      user: user.toPublicJSON(),
-      token: accessToken,
-      refreshToken
+      data: {
+        user: user.toPublicJSON(),
+        token: accessToken,
+        refreshToken
+      }
     });
   } catch (error) {
     res.status(500).json({
@@ -118,9 +120,12 @@ const login = async (req, res) => {
     res.json({
       success: true,
       message: 'Login successful',
-      accessToken,
-      refreshToken,
-      expiresIn
+      data: {
+        user: user.toPublicJSON(),
+        token: accessToken,
+        refreshToken,
+        expiresIn
+      }
     });
   } catch (error) {
     res.status(500).json({
