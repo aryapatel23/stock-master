@@ -15,6 +15,9 @@ import WarehouseList from '../features/warehouses/WarehouseList';
 import WarehouseDetail from '../features/warehouses/WarehouseDetail';
 import WarehouseForm from '../features/warehouses/WarehouseForm';
 import StockList from '../features/stock/StockList';
+import ReceiptList from '../features/receipts/ReceiptList';
+import ReceiptForm from '../features/receipts/ReceiptForm';
+import ReceiptDetail from '../features/receipts/ReceiptDetail';
 
 const AppRoutes = () => {
   return (
@@ -117,8 +120,35 @@ const AppRoutes = () => {
         <Route
           path="/receipts"
           element={
-            <RoleRoute allowedRoles={['admin', 'manager']}>
-              <div>Receipts Page</div>
+            <RoleRoute allowedRoles={['admin']}>
+              <ReceiptList />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/receipts/new"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <ReceiptForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/receipts/:id/edit"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <ReceiptForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/receipts/:id"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <ReceiptDetail />
             </RoleRoute>
           }
         />

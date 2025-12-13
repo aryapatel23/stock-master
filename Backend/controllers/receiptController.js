@@ -47,11 +47,13 @@ const getReceipts = async (req, res) => {
 
     res.json({
       success: true,
-      count: receipts.length,
-      total,
-      page: parseInt(page),
-      pages: Math.ceil(total / limit),
-      receipts
+      data: receipts,
+      meta: {
+        total,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages: Math.ceil(total / limit)
+      }
     });
   } catch (error) {
     res.status(500).json({
