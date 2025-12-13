@@ -30,7 +30,7 @@ const getWarehouses = async (req, res) => {
 
     res.json({
       success: true,
-      warehouses: warehouses.map(w => w.toPublicJSON()),
+      data: warehouses.map(w => w.toPublicJSON()),
       meta: {
         total,
         page: parseInt(page),
@@ -82,7 +82,7 @@ const createWarehouse = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Warehouse created successfully',
-      warehouse: warehouse.toPublicJSON()
+      data: warehouse.toPublicJSON()
     });
   } catch (error) {
     res.status(500).json({
@@ -130,13 +130,15 @@ const getWarehouseById = async (req, res) => {
 
     res.json({
       success: true,
-      warehouse: warehouse.toPublicJSON(),
-      summary: {
-        locationCount,
-        totalProducts: stockSummary[0]?.totalProducts || 0,
-        totalQuantity: stockSummary[0]?.totalQuantity || 0,
-        totalReserved: stockSummary[0]?.totalReserved || 0,
-        available: (stockSummary[0]?.totalQuantity || 0) - (stockSummary[0]?.totalReserved || 0)
+      data: {
+        ...warehouse.toPublicJSON(),
+        summary: {
+          locationCount,
+          totalProducts: stockSummary[0]?.totalProducts || 0,
+          totalQuantity: stockSummary[0]?.totalQuantity || 0,
+          totalReserved: stockSummary[0]?.totalReserved || 0,
+          available: (stockSummary[0]?.totalQuantity || 0) - (stockSummary[0]?.totalReserved || 0)
+        }
       }
     });
   } catch (error) {
@@ -182,7 +184,7 @@ const updateWarehouse = async (req, res) => {
     res.json({
       success: true,
       message: 'Warehouse updated successfully',
-      warehouse: warehouse.toPublicJSON()
+      data: warehouse.toPublicJSON()
     });
   } catch (error) {
     res.status(500).json({

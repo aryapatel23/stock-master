@@ -54,12 +54,17 @@ warehouseSchema.index({ name: 'text' });
 // Method to get public JSON
 warehouseSchema.methods.toPublicJSON = function() {
   return {
-    id: this._id,
+    _id: this._id,
     name: this.name,
-    address: this.address,
+    address: this.address?.street || '',
+    city: this.address?.city || '',
+    state: this.address?.state || '',
+    country: this.address?.country || '',
+    zipCode: this.address?.zipCode || '',
     contact: this.contact,
     isDefault: this.isDefault,
     isActive: this.isActive,
+    totalStock: 0,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   };
