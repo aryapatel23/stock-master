@@ -1,10 +1,41 @@
+import { useSelector } from 'react-redux';
 import { useGetDashboardSummaryQuery } from '../../store/api/dashboardApi';
+import { selectCurrentUser } from '../../store/slices/authSlice';
 import KpiCard from './components/KpiCard';
 import StockMovementChart from './components/StockMovementChart';
 import LowStockChart from './components/LowStockChart';
 
 const Overview = () => {
-  const { data, isLoading, isError, error } = useGetDashboardSummaryQuery();
+  const user = useSelector(selectCurrentUser);
+  const userRole = user?.role || 'employee';
+
+  const shouldFetchData = userRole === 'admin' || userRole === 'manager';
+  const { data, isLoading, isError, error } = useGetDashboardSummaryQuery(undefined, {
+    skip: !shouldFetchData,
+  });
+
+  if (userRole === 'employee') {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="mt-1 text-sm text-gray-500">Welcome back, {user?.name || 'User'}</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-8">
+          <div className="text-center">
+            <div className="mx-auto h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+              <svg className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Welcome back!</h2>
+            <p className="text-gray-600">Check your assigned tasks and manage your daily operations.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isError) {
     return (
@@ -25,13 +56,8 @@ const Overview = () => {
   const stockMovement = summary.stockMovement || [];
   const lowStockItems = summary.lowStockItems || [];
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-500">Overview of your inventory management system</p>
-      </div>
-
+  const renderAdminDashboard = () => (
+    <>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
           title="Total Products"
@@ -75,6 +101,49 @@ const Overview = () => {
         <StockMovementChart data={stockMovement} isLoading={isLoading} />
         <LowStockChart data={lowStockItems} isLoading={isLoading} />
       </div>
+    </>
+  );
+
+  const renderManagerDashboard = () => (
+    <>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
+        <KpiCard
+          title="Low Stock Items"
+          value={kpis.lowStockItems || 0}
+          icon="⚠️"
+          color="yellow"
+          trend={kpis.lowStockTrend > 0 ? 'up' : kpis.lowStockTrend < 0 ? 'down' : 'neutral'}
+          trendValue={kpis.lowStockTrend}
+          isLoading={isLoading}
+        />
+        <KpiCard
+          title="Pending Receipts"
+          value={kpis.pendingReceipts || 0}
+          icon="📋"
+          color="purple"
+          trend={kpis.receiptsTrend > 0 ? 'up' : kpis.receiptsTrend < 0 ? 'down' : 'neutral'}
+          trendValue={kpis.receiptsTrend}
+          isLoading={isLoading}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        <StockMovementChart data={stockMovement} isLoading={isLoading} />
+      </div>
+    </>
+  );
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          {userRole === 'admin' ? 'Complete overview of your inventory management system' : 'Manage your inventory operations'}
+        </p>
+      </div>
+
+      {userRole === 'admin' && renderAdminDashboard()}
+      {userRole === 'manager' && renderManagerDashboard()}
     </div>
   );
 };
