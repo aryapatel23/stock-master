@@ -160,7 +160,7 @@ const updateUser = async (req, res) => {
 
     // Update fields
     if (role !== undefined) {
-      if (!['user', 'admin', 'manager'].includes(role)) {
+      if (!['employee', 'admin', 'manager'].includes(role)) {
         return res.status(400).json({
           success: false,
           message: 'Invalid role'

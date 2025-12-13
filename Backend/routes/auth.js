@@ -24,7 +24,7 @@ const signupValidation = [
     .trim(),
   body('role')
     .optional()
-    .isIn(['user', 'admin', 'manager']).withMessage('Invalid role')
+    .isIn(['employee', 'admin', 'manager']).withMessage('Invalid role')
 ];
 
 const loginValidation = [

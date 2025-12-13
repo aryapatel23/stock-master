@@ -250,8 +250,8 @@ const getPermissions = async (req, res) => {
           ]
         },
         {
-          role: 'user',
-          displayName: 'User',
+          role: 'employee',
+          displayName: 'Employee',
           description: 'Basic inventory operations',
           permissions: [
             'products:read',

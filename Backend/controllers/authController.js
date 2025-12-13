@@ -26,7 +26,7 @@ const signup = async (req, res) => {
       email,
       password,
       phone: phone || null,
-      role: role || 'user'
+      role: role || 'employee'
     });
 
     // Generate tokens
