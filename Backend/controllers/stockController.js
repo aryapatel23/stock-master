@@ -39,16 +39,8 @@ const getStock = async (req, res) => {
       }
     }
 
-    if (locationId) {
-      query.locationId = locationId;
-    } else if (warehouseId) {
-      // Get all locations in this warehouse
-      const locations = await Location.find({ warehouseId, isDeleted: false });
-      query.locationId = { $in: locations.map(l => l._id) };
-    }
-
-    if (availableOnly === 'true') {
-      query.$expr = { $gt: [{ $subtract: ['$quantity', '$reserved'] }, 0] };
+    if (warehouseId) {
+      query.locationId = warehouseId;
     }
 
     // Pagination
@@ -57,35 +49,29 @@ const getStock = async (req, res) => {
 
     const stockData = await StockLocation.find(query)
       .populate('productId', 'name sku uom')
-      .populate('locationId', 'code type warehouseId')
+      .populate('locationId', 'name')
       .skip(skip)
       .limit(parseInt(limit))
       .sort({ productId: 1, locationId: 1 });
 
     // Format response
-    const stock = await Promise.all(stockData.map(async (item) => {
-      const warehouse = item.locationId?.warehouseId 
-        ? await Warehouse.findById(item.locationId.warehouseId).select('name')
-        : null;
-
+    const stock = stockData.map((item) => {
       return {
         productId: item.productId?._id,
-        productName: item.productId?.name,
+        productName: item.productId?.name || 'N/A',
         sku: item.productId?.sku,
         uom: item.productId?.uom,
-        warehouseId: warehouse?._id,
-        warehouseName: warehouse?.name,
-        locationId: item.locationId?._id,
-        locationCode: item.locationId?.code,
+        warehouseId: item.locationId?._id,
+        warehouseName: item.locationId?.name || 'N/A',
         qtyOnHand: item.quantity,
         qtyReserved: item.reserved,
         qtyAvailable: item.quantity - item.reserved
       };
-    }));
+    });
 
     res.json({
       success: true,
-      stock,
+      data: stock,
       meta: {
         total,
         page: parseInt(page),
