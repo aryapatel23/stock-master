@@ -24,6 +24,10 @@ const alertRoutes = require('./routes/alerts');
 const purchaseOrderRoutes = require('./routes/purchaseOrders');
 const dashboardRoutes = require('./routes/dashboard');
 const reportRoutes = require('./routes/reports');
+const settingRoutes = require('./routes/settings');
+const webhookRoutes = require('./routes/webhooks');
+const notificationRoutes = require('./routes/notifications');
+const uploadRoutes = require('./routes/uploads');
 
 const app = express();
 
@@ -76,6 +80,10 @@ app.use('/api/alerts', alertRoutes);
 app.use('/api/purchase-orders', purchaseOrderRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/settings', settingRoutes);
+app.use('/api/webhooks', webhookRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/uploads', uploadRoutes);
 
 // 404 handler
 app.use((req, res) => {
