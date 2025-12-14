@@ -281,12 +281,12 @@ deliveryOrderSchema.methods.canEdit = function() {
 
 // Check if order can be picked
 deliveryOrderSchema.methods.canPick = function() {
-  return ['waiting', 'picking'].includes(this.status) && this.totalReservedQty > 0;
+  return ['draft', 'waiting', 'picking'].includes(this.status);
 };
 
 // Check if order can be packed
 deliveryOrderSchema.methods.canPack = function() {
-  return ['picking', 'packed'].includes(this.status) && this.totalPickedQty > 0;
+  return ['picking', 'packed'].includes(this.status);
 };
 
 // Check if order can be validated

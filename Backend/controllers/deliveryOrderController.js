@@ -49,11 +49,13 @@ const getDeliveryOrders = async (req, res) => {
 
     res.json({
       success: true,
-      count: orders.length,
-      total,
-      page: parseInt(page),
-      pages: Math.ceil(total / limit),
-      deliveryOrders: orders
+      data: orders,
+      meta: {
+        total,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages: Math.ceil(total / limit)
+      }
     });
   } catch (error) {
     res.status(500).json({
@@ -376,10 +378,11 @@ const pickItems = async (req, res) => {
       });
     }
 
-    if (!deliveryOrder.canPick()) {
+    // Allow picking from draft, waiting, or picking status
+    if (!['draft', 'waiting', 'picking'].includes(deliveryOrder.status)) {
       return res.status(400).json({
         success: false,
-        message: `Cannot pick items for ${deliveryOrder.status} delivery order. Must be in waiting or picking status with reserved stock.`
+        message: `Cannot pick items for ${deliveryOrder.status} delivery order. Order must be in draft, waiting, or picking status.`
       });
     }
 
@@ -439,10 +442,11 @@ const packItems = async (req, res) => {
       });
     }
 
-    if (!deliveryOrder.canPack()) {
+    // Allow packing from picking or packed status
+    if (!['picking', 'packed'].includes(deliveryOrder.status)) {
       return res.status(400).json({
         success: false,
-        message: `Cannot pack ${deliveryOrder.status} delivery order. Must have picked items first.`
+        message: `Cannot pack ${deliveryOrder.status} delivery order. Order must be in picking or packed status.`
       });
     }
 
