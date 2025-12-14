@@ -21,6 +21,9 @@ import ReceiptDetail from '../features/receipts/ReceiptDetail';
 import DeliveryOrderList from '../features/deliveryOrders/DeliveryOrderList';
 import DeliveryOrderForm from '../features/deliveryOrders/DeliveryOrderForm';
 import DeliveryOrderDetail from '../features/deliveryOrders/DeliveryOrderDetail';
+import TransferList from '../features/transfers/TransferList';
+import TransferForm from '../features/transfers/TransferForm';
+import TransferDetail from '../features/transfers/TransferDetail';
 
 const AppRoutes = () => {
   return (
@@ -196,7 +199,25 @@ const AppRoutes = () => {
           path="/transfers"
           element={
             <RoleRoute allowedRoles={['admin', 'manager']}>
-              <div>Transfers Page</div>
+              <TransferList />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/transfers/new"
+          element={
+            <RoleRoute allowedRoles={['admin', 'manager']}>
+              <TransferForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/transfers/:id"
+          element={
+            <RoleRoute allowedRoles={['admin', 'manager']}>
+              <TransferDetail />
             </RoleRoute>
           }
         />
