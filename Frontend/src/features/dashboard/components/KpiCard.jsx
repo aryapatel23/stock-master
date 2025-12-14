@@ -1,4 +1,4 @@
-const KpiCard = ({ title, value, icon, trend, trendValue, color = 'blue', isLoading }) => {
+const KpiCard = ({ title, value, icon: Icon, trend, trendValue, color = 'blue', isLoading }) => {
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg shadow p-6 animate-pulse">
@@ -39,9 +39,13 @@ const KpiCard = ({ title, value, icon, trend, trendValue, color = 'blue', isLoad
             {typeof value === 'number' ? value.toLocaleString() : value}
           </p>
         </div>
-        {icon && (
+        {Icon && (
           <div className={`h-12 w-12 rounded-full flex items-center justify-center ${colorClasses[color] || colorClasses.blue}`}>
-            <span className="text-2xl">{icon}</span>
+            {typeof Icon === 'string' ? (
+              <span className="text-2xl">{Icon}</span>
+            ) : (
+              <Icon className="h-6 w-6" />
+            )}
           </div>
         )}
       </div>

@@ -2,90 +2,106 @@ import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { selectCurrentUser } from '../../store/slices/authSlice';
 import clsx from 'clsx';
+import {
+  LayoutDashboard,
+  Package,
+  Warehouse,
+  BarChart3,
+  PackageCheck,
+  Truck,
+  RefreshCw,
+  Scale,
+  BookOpen,
+  TrendingUp,
+  CheckSquare,
+  Users,
+  UserCircle,
+  Settings,
+} from 'lucide-react';
 
 const navigationConfig = [
   {
     name: 'Dashboard',
     href: '/dashboard',
-    icon: '📊',
+    icon: LayoutDashboard,
     roles: ['admin', 'manager', 'employee'],
   },
   {
     name: 'Products',
     href: '/products',
-    icon: '📦',
+    icon: Package,
     roles: ['admin', 'manager'],
   },
   {
     name: 'Warehouses',
     href: '/warehouses',
-    icon: '🏢',
+    icon: Warehouse,
     roles: ['admin'],
   },
   {
     name: 'Stock',
     href: '/stock',
-    icon: '📊',
+    icon: BarChart3,
     roles: ['admin', 'manager'],
   },
   {
     name: 'Receipts',
     href: '/receipts',
-    icon: '📥',
+    icon: PackageCheck,
     roles: ['admin', 'manager'],
   },
   {
     name: 'Delivery Orders',
     href: '/delivery-orders',
-    icon: '📤',
+    icon: Truck,
     roles: ['admin', 'manager'],
   },
   {
     name: 'Transfers',
     href: '/transfers',
-    icon: '🔄',
+    icon: RefreshCw,
     roles: ['admin', 'manager'],
   },
   {
     name: 'Adjustments',
     href: '/adjustments',
-    icon: '⚖️',
+    icon: Scale,
     roles: ['admin'],
   },
   {
     name: 'Ledger',
     href: '/ledger',
-    icon: '📖',
+    icon: BookOpen,
     roles: ['admin'],
   },
   {
     name: 'Reports',
     href: '/reports',
-    icon: '📈',
+    icon: TrendingUp,
     roles: ['admin', 'manager'],
   },
   {
     name: 'My Tasks',
     href: '/tasks',
-    icon: '✅',
+    icon: CheckSquare,
     roles: ['employee'],
   },
   {
     name: 'Users',
     href: '/users',
-    icon: '👥',
+    icon: Users,
     roles: ['admin'],
   },
   {
     name: 'Profile',
     href: '/profile',
-    icon: '👤',
+    icon: UserCircle,
     roles: ['employee'],
   },
   {
     name: 'Settings',
     href: '/settings',
-    icon: '⚙️',
+    icon: Settings,
     roles: ['admin'],
   },
 ];
@@ -108,23 +124,26 @@ const Sidebar = ({ open, setOpen }) => {
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
-              {allowedNavigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    to={item.href}
-                    onClick={() => setOpen && setOpen(false)}
-                    className={clsx(
-                      location.pathname === item.href
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50',
-                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                    )}
-                  >
-                    <span className="text-xl">{item.icon}</span>
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+              {allowedNavigation.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.name}>
+                    <Link
+                      to={item.href}
+                      onClick={() => setOpen && setOpen(false)}
+                      className={clsx(
+                        location.pathname === item.href
+                          ? 'bg-primary-50 text-primary-600'
+                          : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50',
+                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                      )}
+                    >
+                      <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </li>
         </ul>

@@ -4,6 +4,7 @@ import { selectCurrentUser } from '../../store/slices/authSlice';
 import KpiCard from './components/KpiCard';
 import StockMovementChart from './components/StockMovementChart';
 import LowStockChart from './components/LowStockChart';
+import { Package, DollarSign, AlertTriangle, ClipboardList, CheckCircle } from 'lucide-react';
 
 const Overview = () => {
   const user = useSelector(selectCurrentUser);
@@ -25,9 +26,7 @@ const Overview = () => {
         <div className="bg-white rounded-lg shadow p-8">
           <div className="text-center">
             <div className="mx-auto h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-              <svg className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <CheckCircle className="h-8 w-8 text-blue-600" />
             </div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Welcome back!</h2>
             <p className="text-gray-600">Check your assigned tasks and manage your daily operations.</p>
@@ -62,7 +61,7 @@ const Overview = () => {
         <KpiCard
           title="Total Products"
           value={kpis.totalProducts || 0}
-          icon="📦"
+          icon={Package}
           color="blue"
           trend={kpis.productsTrend > 0 ? 'up' : kpis.productsTrend < 0 ? 'down' : 'neutral'}
           trendValue={kpis.productsTrend}
@@ -71,7 +70,7 @@ const Overview = () => {
         <KpiCard
           title="Total Stock Value"
           value={kpis.totalStockValue ? `$${kpis.totalStockValue.toLocaleString()}` : '$0'}
-          icon="💰"
+          icon={DollarSign}
           color="green"
           trend={kpis.valueTrend > 0 ? 'up' : kpis.valueTrend < 0 ? 'down' : 'neutral'}
           trendValue={kpis.valueTrend}
@@ -80,7 +79,7 @@ const Overview = () => {
         <KpiCard
           title="Low Stock Items"
           value={kpis.lowStockItems || 0}
-          icon="⚠️"
+          icon={AlertTriangle}
           color="yellow"
           trend={kpis.lowStockTrend > 0 ? 'up' : kpis.lowStockTrend < 0 ? 'down' : 'neutral'}
           trendValue={kpis.lowStockTrend}
@@ -89,7 +88,7 @@ const Overview = () => {
         <KpiCard
           title="Pending Receipts"
           value={kpis.pendingReceipts || 0}
-          icon="📋"
+          icon={ClipboardList}
           color="purple"
           trend={kpis.receiptsTrend > 0 ? 'up' : kpis.receiptsTrend < 0 ? 'down' : 'neutral'}
           trendValue={kpis.receiptsTrend}
@@ -110,7 +109,7 @@ const Overview = () => {
         <KpiCard
           title="Low Stock Items"
           value={kpis.lowStockItems || 0}
-          icon="⚠️"
+          icon={AlertTriangle}
           color="yellow"
           trend={kpis.lowStockTrend > 0 ? 'up' : kpis.lowStockTrend < 0 ? 'down' : 'neutral'}
           trendValue={kpis.lowStockTrend}
@@ -119,7 +118,7 @@ const Overview = () => {
         <KpiCard
           title="Pending Receipts"
           value={kpis.pendingReceipts || 0}
-          icon="📋"
+          icon={ClipboardList}
           color="purple"
           trend={kpis.receiptsTrend > 0 ? 'up' : kpis.receiptsTrend < 0 ? 'down' : 'neutral'}
           trendValue={kpis.receiptsTrend}
