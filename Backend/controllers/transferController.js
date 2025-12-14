@@ -57,12 +57,12 @@ const getTransfers = async (req, res) => {
 
     res.json({
       success: true,
-      transfers,
-      pagination: {
+      data: transfers,
+      meta: {
         total,
         page: parseInt(page),
         limit: parseInt(limit),
-        pages: Math.ceil(total / parseInt(limit))
+        totalPages: Math.ceil(total / parseInt(limit))
       }
     });
   } catch (error) {
