@@ -18,6 +18,9 @@ import StockList from '../features/stock/StockList';
 import ReceiptList from '../features/receipts/ReceiptList';
 import ReceiptForm from '../features/receipts/ReceiptForm';
 import ReceiptDetail from '../features/receipts/ReceiptDetail';
+import DeliveryOrderList from '../features/deliveryOrders/DeliveryOrderList';
+import DeliveryOrderForm from '../features/deliveryOrders/DeliveryOrderForm';
+import DeliveryOrderDetail from '../features/deliveryOrders/DeliveryOrderDetail';
 
 const AppRoutes = () => {
   return (
@@ -156,8 +159,35 @@ const AppRoutes = () => {
         <Route
           path="/delivery-orders"
           element={
-            <RoleRoute allowedRoles={['admin', 'manager']}>
-              <div>Delivery Orders Page</div>
+            <RoleRoute allowedRoles={['admin']}>
+              <DeliveryOrderList />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/delivery-orders/new"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <DeliveryOrderForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/delivery-orders/:id/edit"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <DeliveryOrderForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/delivery-orders/:id"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <DeliveryOrderDetail />
             </RoleRoute>
           }
         />
