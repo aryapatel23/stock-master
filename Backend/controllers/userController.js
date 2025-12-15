@@ -229,11 +229,93 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// @route   POST /api/users
+// @desc    Create new user (Admin only)
+// @access  Private/Admin
+const createUser = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    // Check if user exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser && !existingUser.isDeleted) {
+      return res.status(400).json({
+        success: false,
+        message: 'User with this email already exists'
+      });
+    }
+
+    // Create user
+    const user = new User({
+      name,
+      email,
+      password,
+      role: role || 'employee'
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      user: user.toPublicJSON()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error creating user',
+      error: error.message
+    });
+  }
+};
+
+// @route   PATCH /api/users/:id/status
+// @desc    Toggle user status (Admin only)
+// @access  Private/Admin
+const toggleUserStatus = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user || user.isDeleted) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Prevent self-deactivation
+    if (user._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot change your own status'
+      });
+    }
+
+    // Toggle status
+    user.isActive = !user.isActive;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: `User ${user.isActive ? 'activated' : 'deactivated'} successfully`,
+      user: user.toPublicJSON()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error updating user status',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getMe,
   updateMe,
   getUsers,
   getUserById,
+  createUser,
   updateUser,
+  toggleUserStatus,
   deleteUser
 };
