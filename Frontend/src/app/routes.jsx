@@ -24,6 +24,9 @@ import DeliveryOrderDetail from '../features/deliveryOrders/DeliveryOrderDetail'
 import TransferList from '../features/transfers/TransferList';
 import TransferForm from '../features/transfers/TransferForm';
 import TransferDetail from '../features/transfers/TransferDetail';
+import AdjustmentList from '../features/adjustments/AdjustmentList';
+import AdjustmentDetail from '../features/adjustments/AdjustmentDetail';
+import AdjustmentForm from '../features/adjustments/AdjustmentForm';
 
 const AppRoutes = () => {
   return (
@@ -226,7 +229,25 @@ const AppRoutes = () => {
           path="/adjustments"
           element={
             <RoleRoute allowedRoles={['admin']}>
-              <div>Adjustments Page</div>
+              <AdjustmentList />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/adjustments/new"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <AdjustmentForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/adjustments/:id"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <AdjustmentDetail />
             </RoleRoute>
           }
         />
