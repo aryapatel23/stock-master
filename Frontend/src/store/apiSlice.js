@@ -36,6 +36,7 @@ export const apiSlice = createApi({
     'Webhook',
     'Notification',
     'Upload',
+    'Ledger',
   ],
   endpoints: () => ({}),
 });
