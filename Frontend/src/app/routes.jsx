@@ -29,6 +29,8 @@ import AdjustmentDetail from '../features/adjustments/AdjustmentDetail';
 import AdjustmentForm from '../features/adjustments/AdjustmentForm';
 import LedgerList from '../features/ledger/LedgerList';
 import ReportsDashboard from '../features/reports/ReportsDashboard';
+import UserList from '../features/users/UserList';
+import UserForm from '../features/users/UserForm';
 
 const AppRoutes = () => {
   return (
@@ -285,7 +287,25 @@ const AppRoutes = () => {
           path="/users"
           element={
             <RoleRoute allowedRoles={['admin']}>
-              <div>Users Page</div>
+              <UserList />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/users/new"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <UserForm />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/users/:id/edit"
+          element={
+            <RoleRoute allowedRoles={['admin']}>
+              <UserForm />
             </RoleRoute>
           }
         />
