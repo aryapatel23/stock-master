@@ -4,6 +4,7 @@ export const warehousesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getWarehouses: builder.query({
       query: () => '/warehouses',
+      transformResponse: (response) => response.warehouses || response,
       providesTags: ['Warehouse'],
     }),
     getWarehouse: builder.query({

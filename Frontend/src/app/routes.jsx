@@ -31,6 +31,7 @@ import LedgerList from '../features/ledger/LedgerList';
 import ReportsDashboard from '../features/reports/ReportsDashboard';
 import UserList from '../features/users/UserList';
 import UserForm from '../features/users/UserForm';
+import Settings from '../features/settings/Settings';
 
 const AppRoutes = () => {
   return (
@@ -323,7 +324,7 @@ const AppRoutes = () => {
           path="/settings"
           element={
             <RoleRoute allowedRoles={['admin']}>
-              <div>Settings Page</div>
+              <Settings />
             </RoleRoute>
           }
         />
