@@ -62,7 +62,7 @@ const AppRoutes = () => {
         <Route
           path="/products/new"
           element={
-            <RoleRoute allowedRoles={['admin']}>
+            <RoleRoute allowedRoles={['admin', 'manager']}>
               <ProductForm />
             </RoleRoute>
           }
@@ -80,7 +80,7 @@ const AppRoutes = () => {
         <Route
           path="/products/:id/edit"
           element={
-            <RoleRoute allowedRoles={['admin']}>
+            <RoleRoute allowedRoles={['admin', 'manager']}>
               <ProductForm />
             </RoleRoute>
           }

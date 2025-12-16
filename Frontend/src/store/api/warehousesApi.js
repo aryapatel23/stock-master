@@ -4,11 +4,18 @@ export const warehousesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getWarehouses: builder.query({
       query: () => '/warehouses',
-      transformResponse: (response) => response.warehouses || response,
+      transformResponse: (response) => {
+        console.log('Warehouses API Response:', response);
+        // Backend returns data array, not warehouses array
+        const warehouses = response.data || response.warehouses || response;
+        console.log('Transformed warehouses:', warehouses);
+        return Array.isArray(warehouses) ? warehouses : [];
+      },
       providesTags: ['Warehouse'],
     }),
     getWarehouse: builder.query({
       query: (id) => `/warehouses/${id}`,
+      transformResponse: (response) => response.data || response.warehouse || response,
       providesTags: (result, error, id) => [{ type: 'Warehouse', id }],
     }),
     createWarehouse: builder.mutation({
