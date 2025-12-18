@@ -134,7 +134,7 @@ const AppRoutes = () => {
         <Route
           path="/receipts"
           element={
-            <RoleRoute allowedRoles={['admin']}>
+            <RoleRoute allowedRoles={['admin', 'manager']}>
               <ReceiptList />
             </RoleRoute>
           }
@@ -143,7 +143,7 @@ const AppRoutes = () => {
         <Route
           path="/receipts/new"
           element={
-            <RoleRoute allowedRoles={['admin']}>
+            <RoleRoute allowedRoles={['admin', 'manager']}>
               <ReceiptForm />
             </RoleRoute>
           }
@@ -152,7 +152,7 @@ const AppRoutes = () => {
         <Route
           path="/receipts/:id/edit"
           element={
-            <RoleRoute allowedRoles={['admin']}>
+            <RoleRoute allowedRoles={['admin', 'manager']}>
               <ReceiptForm />
             </RoleRoute>
           }
@@ -161,7 +161,7 @@ const AppRoutes = () => {
         <Route
           path="/receipts/:id"
           element={
-            <RoleRoute allowedRoles={['admin']}>
+            <RoleRoute allowedRoles={['admin', 'manager']}>
               <ReceiptDetail />
             </RoleRoute>
           }

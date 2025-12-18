@@ -13,8 +13,8 @@ const ReceiptForm = () => {
   const isEditMode = Boolean(id);
 
   const { data: receiptData, isLoading: isLoadingReceipt } = useGetReceiptQuery(id, { skip: !id });
-  const { data: productsData } = useGetProductsQuery();
-  const { data: warehousesData } = useGetWarehousesQuery();
+  const { data: productsData, isLoading: isLoadingProducts } = useGetProductsQuery();
+  const { data: warehousesData, isLoading: isLoadingWarehouses } = useGetWarehousesQuery();
   const [createReceipt, { isLoading: isCreating }] = useCreateReceiptMutation();
   const [updateReceipt, { isLoading: isUpdating }] = useUpdateReceiptMutation();
 
@@ -49,7 +49,8 @@ const ReceiptForm = () => {
     }
   }, [isEditMode, receiptData]);
 
-  if (user?.role !== 'admin') {
+  // Manager and Admin can access
+  if (user?.role !== 'admin' && user?.role !== 'manager') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -60,8 +61,12 @@ const ReceiptForm = () => {
     );
   }
 
-  const products = productsData?.data || [];
-  const warehouses = warehousesData?.data || [];
+  // APIs already return arrays via transformResponse
+  const products = Array.isArray(productsData) ? productsData : [];
+  const warehouses = Array.isArray(warehousesData) ? warehousesData : [];
+
+  console.log('Products:', products);
+  console.log('Warehouses:', warehouses);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -222,15 +227,16 @@ const ReceiptForm = () => {
                   name="warehouseId"
                   value={formData.warehouseId}
                   onChange={handleChange}
+                  disabled={isLoadingWarehouses}
                   className={`mt-1 block w-full rounded-md shadow-sm sm:text-sm ${
                     errors.warehouseId
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
                       : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500'
                   }`}
                 >
-                  <option value="">Select warehouse</option>
+                  <option value="">{isLoadingWarehouses ? 'Loading...' : 'Select warehouse'}</option>
                   {warehouses.map(warehouse => (
-                    <option key={warehouse._id} value={warehouse._id}>
+                    <option key={warehouse._id || warehouse.id} value={warehouse._id || warehouse.id}>
                       {warehouse.name}
                     </option>
                   ))}
@@ -333,15 +339,16 @@ const ReceiptForm = () => {
                     <select
                       value={line.productId}
                       onChange={(e) => handleLineChange(index, 'productId', e.target.value)}
+                      disabled={isLoadingProducts}
                       className={`mt-1 block w-full rounded-md shadow-sm sm:text-sm ${
                         errors[`lines.${index}.productId`]
                           ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
                           : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500'
                       }`}
                     >
-                      <option value="">Select product</option>
+                      <option value="">{isLoadingProducts ? 'Loading...' : 'Select product'}</option>
                       {products.map(product => (
-                        <option key={product._id} value={product._id}>
+                        <option key={product._id || product.id} value={product._id || product.id}>
                           {product.name} ({product.sku})
                         </option>
                       ))}

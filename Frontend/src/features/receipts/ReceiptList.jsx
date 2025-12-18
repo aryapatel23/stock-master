@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useGetReceiptsQuery } from '../../store/api/receiptsApi';
+import { useGetWarehousesQuery } from '../../store/api/warehousesApi';
 import { selectCurrentUser } from '../../store/slices/authSlice';
 
 const ReceiptList = () => {
@@ -9,14 +10,19 @@ const ReceiptList = () => {
   const user = useSelector(selectCurrentUser);
   const [activeStatus, setActiveStatus] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [warehouseFilter, setWarehouseFilter] = useState('');
 
-  const { data, isLoading, isError, error } = useGetReceiptsQuery({
+  const { data: warehousesData } = useGetWarehousesQuery();
+  const { data, isLoading, isError, error, refetch } = useGetReceiptsQuery({
     status: activeStatus || undefined,
+    warehouseId: warehouseFilter || undefined,
     page: currentPage,
     limit: 20,
   });
 
-  if (user?.role !== 'admin') {
+  // Manager and Admin can access
+  if (user?.role !== 'admin' && user?.role !== 'manager') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -141,6 +147,19 @@ const ReceiptList = () => {
 
   const receipts = data?.data || [];
   const meta = data?.meta || { total: 0, page: 1, totalPages: 1 };
+  const warehouses = warehousesData?.data || [];
+
+  // Client-side search filter
+  const filteredReceipts = receipts.filter(receipt => {
+    if (!search) return true;
+    const searchLower = search.toLowerCase();
+    return (
+      receipt.receiptNumber?.toLowerCase().includes(searchLower) ||
+      receipt.referenceNumber?.toLowerCase().includes(searchLower) ||
+      receipt.supplierName?.toLowerCase().includes(searchLower) ||
+      receipt.supplier?.name?.toLowerCase().includes(searchLower)
+    );
+  });
 
   const formatDate = (date) => {
     if (!date) return 'N/A';
@@ -187,6 +206,75 @@ const ReceiptList = () => {
         </button>
       </div>
 
+      {/* Filters Section */}
+      <div className="bg-white shadow-md rounded-lg p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
+              Search
+            </label>
+            <input
+              type="text"
+              id="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by receipt #, reference, or supplier..."
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="warehouse" className="block text-sm font-medium text-gray-700 mb-1">
+              Warehouse
+            </label>
+            <select
+              id="warehouse"
+              value={warehouseFilter}
+              onChange={(e) => {
+                setWarehouseFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            >
+              <option value="">All Warehouses</option>
+              {warehouses.map((warehouse) => (
+                <option key={warehouse._id || warehouse.id} value={warehouse._id || warehouse.id}>
+                  {warehouse.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="mt-4 flex justify-between items-center">
+          <p className="text-sm text-gray-600">
+            {filteredReceipts.length} receipt{filteredReceipts.length !== 1 ? 's' : ''} found
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setSearch('');
+                setWarehouseFilter('');
+                setActiveStatus('');
+                setCurrentPage(1);
+              }}
+              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+            >
+              Clear Filters
+            </button>
+            <button
+              onClick={refetch}
+              className="inline-flex items-center px-3 py-1 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           {statusTabs.map((tab) => (
@@ -207,8 +295,8 @@ const ReceiptList = () => {
 
       {isLoading && <LoadingSkeleton />}
       {isError && <ErrorState />}
-      {!isLoading && !isError && receipts.length === 0 && <EmptyState />}
-      {!isLoading && !isError && receipts.length > 0 && (
+      {!isLoading && !isError && filteredReceipts.length === 0 && <EmptyState />}
+      {!isLoading && !isError && filteredReceipts.length > 0 && (
         <div className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-300">
@@ -219,6 +307,9 @@ const ReceiptList = () => {
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Supplier Name
+                  </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Warehouse
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Receipt Date
@@ -235,7 +326,7 @@ const ReceiptList = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {receipts.map((receipt) => (
+                {filteredReceipts.map((receipt) => (
                   <tr key={receipt._id} className="hover:bg-gray-50 transition-colors">
                     <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm">
                       <div className="font-medium text-gray-900">{getReceiptNumber(receipt)}</div>
@@ -245,6 +336,9 @@ const ReceiptList = () => {
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
                       {getSupplierName(receipt)}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {receipt.warehouseId?.name || 'N/A'}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {formatDate(receipt.expectedDate || receipt.receiptDate || receipt.createdAt)}

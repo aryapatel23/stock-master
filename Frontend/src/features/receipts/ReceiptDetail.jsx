@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useGetReceiptQuery, useUpdateReceiptMutation } from '../../store/api/receiptsApi';
+import { useGetReceiptQuery, useUpdateReceiptMutation, useValidateReceiptMutation, useCancelReceiptMutation, useUpdateReceivedQtyMutation } from '../../store/api/receiptsApi';
 import { selectCurrentUser } from '../../store/slices/authSlice';
 import { useState } from 'react';
 
@@ -10,9 +10,15 @@ const ReceiptDetail = () => {
   const user = useSelector(selectCurrentUser);
   const { data, isLoading, isError, error } = useGetReceiptQuery(id);
   const [updateReceipt, { isLoading: isUpdating }] = useUpdateReceiptMutation();
+  const [validateReceipt, { isLoading: isValidating }] = useValidateReceiptMutation();
+  const [cancelReceipt, { isLoading: isCanceling }] = useCancelReceiptMutation();
+  const [updateReceivedQty] = useUpdateReceivedQtyMutation();
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelNotes, setCancelNotes] = useState('');
+  const [editingQty, setEditingQty] = useState({});
 
-  if (user?.role !== 'admin') {
+  // Manager and Admin can access
+  if (user?.role !== 'admin' && user?.role !== 'manager') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -28,23 +34,39 @@ const ReceiptDetail = () => {
       await updateReceipt({ id, status: newStatus }).unwrap();
     } catch (error) {
       console.error('Failed to update status:', error);
+      alert(error?.data?.message || 'Failed to update status');
     }
   };
 
   const handleValidate = async () => {
     try {
-      await updateReceipt({ id, status: 'done' }).unwrap();
+      await validateReceipt({ id, idempotencyKey: `receipt-${id}-${Date.now()}` }).unwrap();
+      alert('Receipt validated successfully and stock updated');
     } catch (error) {
       console.error('Failed to validate receipt:', error);
+      alert(error?.data?.message || 'Failed to validate receipt');
     }
   };
 
   const handleCancel = async () => {
     try {
-      await updateReceipt({ id, status: 'canceled' }).unwrap();
+      await cancelReceipt({ id, notes: cancelNotes }).unwrap();
       setShowCancelModal(false);
+      setCancelNotes('');
+      alert('Receipt canceled successfully');
     } catch (error) {
       console.error('Failed to cancel receipt:', error);
+      alert(error?.data?.message || 'Failed to cancel receipt');
+    }
+  };
+
+  const handleUpdateQty = async (lineId, receivedQty) => {
+    try {
+      await updateReceivedQty({ id, lines: [{ lineId, receivedQty }] }).unwrap();
+      setEditingQty({});
+    } catch (error) {
+      console.error('Failed to update quantity:', error);
+      alert(error?.data?.message || 'Failed to update quantity');
     }
   };
 
